@@ -44,20 +44,19 @@ function App() {
 
   //         <p>Container ID: {containerId}</p>
   // <h3>Environment Variables:</h3>
+  // <ul>
+  // {Object.entries(envVariables).map(([key, value]) => (
+  //   <li key={key}>
+  //     <strong>{key}:</strong> {value}
+  //   </li>
+  // ))}
+  // </ul>
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>Pick and Pack</p>
-
-        <ul>
-          {Object.entries(envVariables).map(([key, value]) => (
-            <li key={key}>
-              <strong>{key}:</strong> {value}
-            </li>
-          ))}
-        </ul>
         <a
           className="App-link"
           href="https://reactjs.org"
