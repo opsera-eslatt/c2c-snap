@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 const getContainerId = () => {
-  // Check if 'fs' is available (Node.js environment)
   if (typeof window === 'undefined') {
     try {
       const fs = require('fs');
@@ -15,16 +14,25 @@ const getContainerId = () => {
       return null;
     }
   }
-  return null; // Returning null if running in the browser
+  return null;
+};
+
+const getEnvironmentVariables = () => {
+  const variables = {};
+
+  // Iterate through all environment variables
+  for (const key in process.env) {
+    if (process.env.hasOwnProperty(key)) {
+      variables[key] = process.env[key];
+    }
+  }
+
+  return variables;
 };
 
 function App() {
-  // Get all environment variables
-  const environmentVariables = Object.keys(process.env).map(key => (
-    <p key={key}>{`${key}: ${process.env[key]}`}</p>
-  ));
-
   const [containerId, setContainerId] = useState(null);
+  const [envVariables, setEnvVariables] = useState(getEnvironmentVariables());
 
   useEffect(() => {
     const fetchContainerId = () => {
@@ -32,7 +40,13 @@ function App() {
       setContainerId(id);
     };
 
+    const fetchEnvironmentVariables = () => {
+      const variables = getEnvironmentVariables();
+      setEnvVariables(variables);
+    };
+
     fetchContainerId();
+    fetchEnvironmentVariables();
   }, []);
 
   return (
@@ -40,8 +54,15 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>Pick and Pack</p>
-        {environmentVariables}
         <p>Container ID: {containerId}</p>
+        <h3>Environment Variables:</h3>
+        <ul>
+          {Object.entries(envVariables).map(([key, value]) => (
+            <li key={key}>
+              <strong>{key}:</strong> {value}
+            </li>
+          ))}
+        </ul>
         <a
           className="App-link"
           href="https://reactjs.org"
