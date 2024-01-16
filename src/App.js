@@ -1,18 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-const fs = require('fs');
 
 const getContainerId = () => {
-  try {
-    // Read the contents of the cgroup file to obtain the container ID
-    const content = fs.readFileSync('/proc/self/cgroup', 'utf8');
-    const match = /\/docker\/([a-f0-9]{64})/i.exec(content);
-    return match ? match[1] : null;
-  } catch (error) {
-    console.error('Error getting container ID:', error.message);
-    return null;
+  // Check if 'fs' is available (Node.js environment)
+  if (typeof window === 'undefined') {
+    try {
+      const fs = require('fs');
+      const content = fs.readFileSync('/proc/self/cgroup', 'utf8');
+      const match = /\/docker\/([a-f0-9]{64})/i.exec(content);
+      return match ? match[1] : null;
+    } catch (error) {
+      console.error('Error getting container ID:', error.message);
+      return null;
+    }
   }
+  return null; // Returning null if running in the browser
 };
 
 function App() {
