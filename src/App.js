@@ -3,19 +3,12 @@ import logo from './logo.svg';
 import './App.css';
 
 const getContainerId = () => {
-  if (typeof window === 'undefined') {
-    try {
-      const fs = require('fs');
-      const content = fs.readFileSync('/proc/self/cgroup', 'utf8');
-      const match = /\/docker\/([a-f0-9]{64})/i.exec(content);
-      return match ? match[1] : null;
-    } catch (error) {
-      console.error('Error getting container ID:', error.message);
-      return null;
-    }
-  }
-  return null;
+  const podName = process.env.HOSTNAME || process.env.HOST || null;
+  const namespace = process.env.NAMESPACE || process.env.NS || null;
+
+  return podName && namespace ? `${namespace}/${podName}` : null;
 };
+
 
 const getEnvironmentVariables = () => {
   const variables = {};
