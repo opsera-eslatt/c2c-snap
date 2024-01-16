@@ -1,12 +1,14 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+const fs = require('fs');
 
-const getContainerId = async () => {
+const getContainerId = () => {
   try {
-    const response = await fetch('/api/container-id'); // Assuming you have an endpoint that returns the container ID
-    const data = await response.json();
-    return data.containerId;
+    // Read the contents of the cgroup file to obtain the container ID
+    const content = fs.readFileSync('/proc/self/cgroup', 'utf8');
+    const match = /\/docker\/([a-f0-9]{64})/i.exec(content);
+    return match ? match[1] : null;
   } catch (error) {
     console.error('Error getting container ID:', error.message);
     return null;
@@ -22,8 +24,8 @@ function App() {
   const [containerId, setContainerId] = useState(null);
 
   useEffect(() => {
-    const fetchContainerId = async () => {
-      const id = await getContainerId();
+    const fetchContainerId = () => {
+      const id = getContainerId();
       setContainerId(id);
     };
 
