@@ -12,7 +12,7 @@ FROM nginx
 COPY --from=builder /app/build /usr/share/nginx/html
 
 # Copy the renamed script
-COPY env_vars.sh /usr/share/nginx/html/snap-app.sh
+COPY snap-app.sh /usr/share/nginx/html/snap-app.sh
 RUN chmod +x /usr/share/nginx/html/snap-app.sh
 
 # Configure Nginx to serve the renamed script
